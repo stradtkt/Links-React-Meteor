@@ -1,23 +1,15 @@
-import {Meteor} from 'meteor/meteor';
-import React, {Component} from 'react';
+import { Meteor } from 'meteor/meteor';
 import ReactDOM from 'react-dom';
-import {Router, Route, browserHistory} from 'react-router';
-import Signup from './../imports/ui/Signup';
-import Login from './../imports/ui/Login';
-import Link from './../imports/ui/Link';
-import NotFound from './../imports/ui/NotFound';
+import { Tracker } from 'meteor/tracker';
 
-import './main.html';
+import { routes, onAuthChange } from '../imports/routes/routes';
+import '../imports/startup/simple-schema-configuration.js';
 
-const routes = (
-    <Router history={browserHistory}>
-        <Route path="/signup" component={Signup}/>
-        <Route path="/links" component={Link}/>
-        <Route path="/login" component={Login}/>
-        <Route path="*" component={NotFound}/>
-    </Router>
-);
+Tracker.autorun(() => {
+  const isAuthenticated = !!Meteor.userId();
+  onAuthChange(isAuthenticated);
+});
 
 Meteor.startup(() => {
-    ReactDOM.render(routes, document.getElementById('app'));
+  ReactDOM.render(routes, document.getElementById('app'));
 });
